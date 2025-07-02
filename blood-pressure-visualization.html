@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>혈압이란?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .presentation-container {
+            width: 1920px;
+            height: 1080px;
+            background: linear-gradient(to right bottom, #2c3e50, #3498db);
+            display: flex;
+            flex-direction: column;
+            padding: 60px;
+            transform-origin: top left;
+        }
+
+        h1 {
+            color: white;
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 60px;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        .left-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .heart-demo {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .heart-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 108px;
+            animation: heartbeat 1s ease-in-out infinite;
+        }
+
+        .heart:before,
+        .heart:after {
+            position: absolute;
+            content: "";
+            left: 60px;
+            top: 0;
+            width: 60px;
+            height: 96px;
+            background: #e74c3c;
+            border-radius: 60px 60px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.8);
+        }
+
+        .heart:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            14% { transform: translate(-50%, -50%) scale(1.3); }
+            28% { transform: translate(-50%, -50%) scale(1); }
+            42% { transform: translate(-50%, -50%) scale(1.3); }
+            70% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .vessel {
+            position: absolute;
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .vessel-horizontal {
+            width: 250px;
+            height: 40px;
+            top: 50%;
+            left: 180px;
+            transform: translateY(-50%);
+        }
+
+        .blood-flow {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            top: 7.5px;
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            0% { left: -30px; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 280px; opacity: 0; }
+        }
+
+        .pressure-wave {
+            position: absolute;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            animation: pressure-pulse 1s ease-out infinite;
+        }
+
+        @keyframes pressure-pulse {
+            0% {
+                width: 40px;
+                height: 40px;
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .pressure-display {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            display: flex;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+        }
+
+        .pressure-box {
+            text-align: center;
+            color: white;
+        }
+
+        .pressure-value {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .pressure-label {
+            font-size: 24px;
+            opacity: 0.9;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .graph-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            height: 350px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            flex: 1;
+            color: #2c3e50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-box h2 {
+            color: #e74c3c;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .info-box strong {
+            color: #e74c3c;
+        }
+
+        .controls {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        button {
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* 반응형 스케일링 */
+        @media (max-width: 1920px) {
+            .presentation-container {
+                transform: scale(0.75);
+            }
+        }
+
+        @media (max-width: 1440px) {
+            .presentation-container {
+                transform: scale(0.5625);
+            }
+        }
+
+        @media (max-width: 1080px) {
+            .presentation-container {
+                transform: scale(0.42);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <h1>혈압이란?</h1>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="heart-demo">
+                    <div class="heart-container">
+                        <div class="heart"></div>
+                        <div class="vessel vessel-horizontal">
+                            <div class="blood-flow" style="animation-delay: 0s;"></div>
+                            <div class="blood-flow" style="animation-delay: 0.5s;"></div>
+                            <div class="blood-flow" style="animation-delay: 1s;"></div>
+                            <div class="blood-flow" style="animation-delay: 1.5s;"></div>
+                        </div>
+                        <div class="pressure-wave" style="animation-delay: 0s;"></div>
+                        <div class="pressure-wave" style="animation-delay: 0.5s;"></div>
+                    </div>
+                </div>
+                
+                <div class="pressure-display">
+                    <div class="pressure-box">
+                        <div class="pressure-label">수축기 혈압</div>
+                        <div class="pressure-value" id="systolic">120</div>
+                        <div class="pressure-label">mmHg</div>
+                    </div>
+                    <div class="pressure-box">
+                        <div class="pressure-label">이완기 혈압</div>
+                        <div class="pressure-value" id="diastolic">80</div>
+                        <div class="pressure-label">mmHg</div>
+                    </div>
+                    <div class="pressure-box">
+                        <div class="pressure-label">심박수</div>
+                        <div class="pressure-value" id="heartRate">72</div>
+                        <div class="pressure-label">bpm</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button onclick="simulateRest()">안정 상태</button>
+                    <button onclick="simulateExercise()">운동 상태</button>
+                    <button onclick="simulateStress()">스트레스 상태</button>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="graph-container">
+                    <canvas id="pressureGraph"></canvas>
+                </div>
+                
+                <div class="info-box">
+                    <h2>핵심 개념</h2>
+                    <p><strong>혈압:</strong> 심장이 혈액을 펌프질할 때 혈관 벽에 가해지는 압력</p>
+                    <p><strong>수축기 혈압:</strong> 심장이 수축할 때의 최고 압력 (정상: 90-120)</p>
+                    <p><strong>이완기 혈압:</strong> 심장이 이완할 때의 최저 압력 (정상: 60-80)</p>
+                    <p><strong>정상 혈압:</strong> 120/80 mmHg 미만</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        let currentState = 'rest';
+        let time = 0;
+        let systolicPressure = 120;
+        let diastolicPressure = 80;
+        let heartRate = 72;
+        
+        // 그래프 설정
+        const canvas = document.getElementById('pressureGraph');
+        const ctx = canvas.getContext('2d');
+        
+        // 캔버스 크기 설정 함수
+        function setCanvasSize() {
+            const container = canvas.parentElement;
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width - 80; // padding 고려
+            canvas.height = rect.height - 80; // padding 고려
+        }
+        
+        function updatePressure() {
+            document.getElementById('systolic').textContent = systolicPressure;
+            document.getElementById('diastolic').textContent = diastolicPressure;
+            document.getElementById('heartRate').textContent = heartRate;
+            
+            // 심장 박동 속도 조정
+            const heartElement = document.querySelector('.heart');
+            const animationDuration = 60 / heartRate;
+            heartElement.style.animationDuration = `${animationDuration}s`;
+            
+            // 압력파 애니메이션 속도 조정
+            const pressureWaves = document.querySelectorAll('.pressure-wave');
+            pressureWaves.forEach(wave => {
+                wave.style.animationDuration = `${animationDuration}s`;
+            });
+            
+            // 혈류 속도 조정
+            const flows = document.querySelectorAll('.blood-flow');
+            flows.forEach(flow => {
+                const duration = 2 * (72 / heartRate);
+                flow.style.animationDuration = `${duration}s`;
+            });
+        }
+        
+        function drawPressureWave() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 그래프 배경 그리드
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 1;
+            
+            // Y축 그리드와 레이블
+            for (let i = 0; i <= 200; i += 40) {
+                const y = canvas.height - (i / 200 * canvas.height);
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+                
+                // 압력 레이블
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.font = '16px Arial';
+                ctx.fillText(i + '', 5, y - 5);
+            }
+            
+            // 압력 곡선
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#FFD700';
+            ctx.beginPath();
+            
+            for (let x = 0; x < canvas.width; x++) {
+                const t = (time + x * 0.005) % (Math.PI * 2);
+                const cardiacCycle = 60 / heartRate;
+                
+                // 심장 주기에 따른 압력 변화 시뮬레이션
+                let pressure;
+                const cyclePosition = (t % (Math.PI * 2)) / (Math.PI * 2);
+                
+                if (cyclePosition < 0.3) {
+                    // 수축기
+                    pressure = diastolicPressure + (systolicPressure - diastolicPressure) * 
+                              Math.sin(cyclePosition / 0.3 * Math.PI / 2);
+                } else if (cyclePosition < 0.4) {
+                    // 수축기 정점
+                    pressure = systolicPressure;
+                } else {
+                    // 이완기
+                    pressure = systolicPressure - (systolicPressure - diastolicPressure) * 
+                              ((cyclePosition - 0.4) / 0.6);
+                }
+                
+                const y = canvas.height - (pressure / 200 * canvas.height);
+                
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            time += 0.05 * (heartRate / 72);
+            requestAnimationFrame(drawPressureWave);
+        }
+        
+        function simulateRest() {
+            currentState = 'rest';
+            systolicPressure = 120;
+            diastolicPressure = 80;
+            heartRate = 72;
+            updatePressure();
+        }
+        
+        function simulateExercise() {
+            currentState = 'exercise';
+            systolicPressure = 160;
+            diastolicPressure = 85;
+            heartRate = 140;
+            updatePressure();
+        }
+        
+        function simulateStress() {
+            currentState = 'stress';
+            systolicPressure = 140;
+            diastolicPressure = 90;
+            heartRate = 95;
+            updatePressure();
+        }
+        
+        // 초기화
+        setCanvasSize();
+        updatePressure();
+        drawPressureWave();
+        
+        // 창 크기 조정 시 캔버스 재설정
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+        });
+    </script>
+</body>
+</html>
